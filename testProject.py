@@ -52,7 +52,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
             cv2.imshow("Frame", image)
             cv2.imshow('Cropped', Cropped)
             cv2.waitKey(0)
-            break
+            continue
         except Exception as e:
             print('error', e)
             continue
