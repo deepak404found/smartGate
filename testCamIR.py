@@ -22,7 +22,7 @@ def AlprFunc() :
     tryCount = 0
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         image = frame.array
-        cv2.imshow("Frame", image)
+        #cv2.imshow("Frame", image)
         rawCapture.truncate(0)
         try:
             # convert to grey scale
@@ -62,8 +62,8 @@ def AlprFunc() :
         except Exception as e:
             tryCount=tryCount+1
             print('error', e)
-            if (tryCount == 5) :
-                return text
+            if (tryCount == 3) :
+                return
             else:
                 continue
     cv2.destroyAllWindows()
