@@ -7,22 +7,41 @@ from picamera import PiCamera
 import RPi.GPIO as GPIO
 import time
 
+valid = "HR26DK8337"
+
+redLed = 24
+greenLed = 23
+
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.IN) # set up GPIO pin 17 as an input pin
+
+GPIO.setup(redLed, GPIO.OUT) # set up GPIO pin redLed as an output pin
+GPIO.setup(greenLed, GPIO.OUT) # set up GPIO pin greenLed as an output pin
+
+GPIO.output(redLed, GPIO.LOW)
+GPIO.output(greenLed, GPIO.LOW)
 
 camera = PiCamera()
 camera.resolution = (740, 580)
 camera.framerate = 30
 rawCapture = PiRGBArray(camera, size=(740, 580))
 
+# function to blink led
+def blinkLed(led, count) :
+    for i in range(count):
+        GPIO.output(led, GPIO.HIGH)
+        time.sleep(0.8)
+        GPIO.output(led, GPIO.LOW)
+        time.sleep(0.1)
+
 # function to recoginise the text of license plate
 def AlprFunc() :
     text = ''
     # only 5 try or return ''
-    tryCount = 0
+    tryCount = 5
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         image = frame.array
-        #cv2.imshow("Frame", image)
+        cv2.imshow("Frame", image)
         rawCapture.truncate(0)
         try:
             # convert to grey scale
@@ -57,12 +76,14 @@ def AlprFunc() :
             Cropped = gray[topx:bottomx+1, topy:bottomy+1]
             text = pytesseract.image_to_string(Cropped, config='--psm 11')
             print("Detected Number is:", text)
+            cv2.imshow("Frame", image)
+
             time.sleep(0.8)
             break
         except Exception as e:
-            tryCount=tryCount+1
+            tryCount=tryCount-1
             print('error', e)
-            if (tryCount == 3) :
+            if (tryCount == 0) :
                 return
             else:
                 continue
@@ -75,8 +96,14 @@ while True:
         break
     if GPIO.input(17):
         print("Motion detected")
+        blinkLed(redLed, 1)
         licenseNum = AlprFunc()
         print("number is :", licenseNum)
+        # if licenseNum include valid
+        if licenseNum and valid in licenseNum:
+            blinkLed(greenLed, 1)
+        else:
+            blinkLed(redLed, 3)
         time.sleep(2)
     else:
         print("No motion detected")
