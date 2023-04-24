@@ -9,19 +9,38 @@ import time
 
 GPIO.cleanup()
 
+valid = "HR26DK8337"
+
+redLed = 24
+greenLed = 23
+
 Forward=26
 Backward=20
-sleeptime=1
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.IN) # set up GPIO pin 17 as an input pin
 GPIO.setup(Forward, GPIO.OUT)
 GPIO.setup(Backward, GPIO.OUT)
 
+GPIO.setup(redLed, GPIO.OUT) # set up GPIO pin redLed as an output pin
+GPIO.setup(greenLed, GPIO.OUT) # set up GPIO pin greenLed as an output pin
+
+GPIO.output(redLed, GPIO.LOW)
+GPIO.output(greenLed, GPIO.LOW)
+
 camera = PiCamera()
 camera.resolution = (740, 580)
 camera.framerate = 30
 rawCapture = PiRGBArray(camera, size=(740, 580))
+
+# function to blink led
+def blinkLed(led, count) :
+    for i in range(count):
+        GPIO.output(led, GPIO.HIGH)
+        time.sleep(0.8)
+        GPIO.output(led, GPIO.LOW)
+        time.sleep(0.1)
+
 
 # function to control the gate
 def contorlGate(open: bool):
@@ -95,12 +114,21 @@ while True:
     if key == ord('q'):
         break
     if GPIO.input(17):
+        # if licenseNum.find(valid) != -1:
+        #     print('valid plate detected')
+        #     contorlGate(True)
+        # time.sleep(2)
         print("Motion detected")
+        blinkLed(redLed, 1)
         licenseNum = AlprFunc()
         print("number is :", licenseNum)
-        if licenseNum.find(valid) != -1:
+        # if licenseNum include valid
+        if licenseNum and valid in licenseNum:
             print('valid plate detected')
             contorlGate(True)
+            blinkLed(greenLed, 1)
+        else:
+            blinkLed(redLed, 3)
         time.sleep(2)
     else:
         print("No motion detected")
