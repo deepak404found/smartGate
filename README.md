@@ -2,6 +2,43 @@
 
 Real-Time License Plate Recognition using Raspberry Pi and Python
 
+# Start the program
+
+- Connect the Raspberry Pi to the same network as the computer
+- Connect the Raspberry Pi with real vnc viewer
+- Open terminal and go to the project directory
+  ```bash
+  cd smartGate
+  ```
+- Activate the virtual environment
+
+  ```bash
+  source .venv/bin/activate
+  ```
+
+- Run testProject.py to test the program and check the camera
+
+  ```bash
+  python3 testProject.py
+  ```
+
+- Run finalProject.py to start the program
+
+  ```bash
+  python3 finalProject.py
+  ```
+
+# All Setups
+
+## Hardware Requirements
+
+- Raspberry Pi
+- Pi camera
+- IR Sensor
+- Motor Driver(L298N)
+- Linear Actuator
+- Power Supply (12V Battery).
+
 ## Raspberry Pi OS Information
 
 - PRETTY_NAME="Raspbian GNU/Linux 11 (bullseye)"
