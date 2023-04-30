@@ -1,6 +1,8 @@
-# smartGate
+# Smart Gate
 
 Real-Time License Plate Recognition using Raspberry Pi and Python
+
+The project aims to develop an Automatic Door Opening System Through Vehicle Registration Number Plate using Raspberry Pi, Pi Camera, IR Sensor, and Linear Actuator. The system will automatically recognize the vehicle's registration number plate and open the door, providing convenience and security for the user. The linear actuator will be used to control the door's opening and closing mechanism, while the IR sensor will detect any obstacle in the door's path. The project will be implemented using the L298N motor driver and Python programming language, providing a cost-effective and efficient solution for automatic door opening.
 
 # Start the program
 
